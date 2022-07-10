@@ -1,5 +1,8 @@
 import React, { useState } from "react";
 import "./styles.css";
+import { InputTodo } from "./components/InputTodo";
+import { IncompleateTodo } from "./components/IncompleateTodo";
+import { CompleateTodo } from "./components/CompleateTodo";
 
 export const App = () => {
   // 入力したTODO
@@ -49,43 +52,24 @@ export const App = () => {
 
   return (
     <>
-      <div className="input-area">
-        <input
-          placeholder="TODOを入力"
-          value={todoText}
-          onChange={onChangeTodoText}
-        />
-        <button onClick={onClickAdd}>追加</button>
-      </div>
+      <InputTodo
+        todoText={todoText}
+        onChange={onChangeTodoText}
+        onClick={onClickAdd}
+        disabled={incompleateTodos.length >= 5}
+      />
 
-      <div className="incompleate-area">
-        <p className="title">未完了のTODO</p>
-        <ul>
-          {incompleateTodos.map((todo, index) => {
-            return (
-              <div key={todo} className="list-row">
-                <li>{todo}</li>
-                <button onClick={() => onClickCompleate(index)}>完了</button>
-                <button onClick={() => onClickDelete(index)}>削除</button>
-              </div>
-            );
-          })}
-        </ul>
-      </div>
+      {incompleateTodos.length >= 5 && (
+        <p style={{ color: "red" }}>登録できるTODOの上限は5個です</p>
+      )}
 
-      <div className="compleate-area">
-        <p className="title">完了のTODO</p>
-        <ul>
-          {compleateTodos.map((todo, index) => {
-            return (
-              <div key={todo} className="list-row">
-                <li>{todo}</li>
-                <button onClick={() => onClickBack(index)}>戻す</button>
-              </div>
-            );
-          })}
-        </ul>
-      </div>
+      <IncompleateTodo
+        todos={incompleateTodos}
+        onClickCompleate={onClickCompleate}
+        onClickDelete={onClickDelete}
+      />
+
+      <CompleateTodo todos={compleateTodos} onClickBack={onClickBack} />
     </>
   );
 };
